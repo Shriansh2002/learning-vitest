@@ -30,11 +30,11 @@ export function calculateDiscount(price, discountCode) {
 export function validateUserInput(username, age) {
   let errors = [];
 
-  if (typeof username !== 'string' || username.length < 3) {
+  if (typeof username !== 'string' || username.length < 3 || username.length > 255) {
     errors.push('Invalid username');
   }
 
-  if (typeof age !== 'number' || age < 18) {
+  if (typeof age !== 'number' || age < 18 || age > 100) {
     errors.push('Invalid age');
   }
 
@@ -50,6 +50,10 @@ export function isPriceInRange(price, min, max) {
 export function isValidUsername(username) {
   const minLength = 5;
   const maxLength = 15;
+
+  if (typeof username !== 'string') {
+    return false;
+  }
 
   return username.length >= minLength && username.length <= maxLength;
 }
@@ -123,6 +127,12 @@ export function createProduct(product) {
       error: { code: 'invalid_name', message: 'Name is missing' },
     };
 
+  if (!product.price)
+    return {
+      success: false,
+      error: { code: 'invalid_price', message: 'Price is missing' },
+    };
+
   if (product.price <= 0)
     return {
       success: false,
@@ -134,7 +144,7 @@ export function createProduct(product) {
 
 export function isStrongPassword(password) {
   // Check the length of the password (minimum 8 characters)
-  if (password.length < 8) {
+  if (password.length < 8 || password.length > 255) {
     return false;
   }
 
